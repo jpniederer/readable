@@ -1,11 +1,18 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { getPosts } from '../actions'
 import logo from '../logo.svg';
 import '../App.css';
 import { Container, Header, Button, Icon } from 'semantic-ui-react';
+import * as api from '../utils/api';
 
 class App extends Component {
+  
+  
   render() {
+    const p =  api.fetchPosts().then((posts) => posts);
+   api.fetchPosts().then((posts) => posts.map(post => {console.log(post)}));
+    
     return (
       <div className="App">
         <Container text>
@@ -37,7 +44,13 @@ function mapStateToProps({ }) {
 }
 
 function mapDispatchToProps(dispatch) {
-  return {}
+  return {
+    fetchAllPosts: () =>
+      api.fetchPosts().then((posts) => {
+        dispatch(getPosts(posts));
+      })
+
+  }
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);
