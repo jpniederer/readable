@@ -1,3 +1,4 @@
+import axios from 'axios';
 const ROOT_URL = 'http://localhost:5001';
 
 const headers = {
@@ -7,8 +8,10 @@ const headers = {
 
 // Posts
 export const fetchPosts = () => {
-  return fetch(`${ROOT_URL}/posts`, { headers })
-  .then((res) => res.json());
+  const request = axios.get(`${ROOT_URL}/posts`, { headers })
+  return request;
+  //return request.then((data) => data);
+  //.then((response) => response.data);
 }
 
 export const fetchPosts2 = () => {

@@ -1,17 +1,38 @@
 import React, { Component } from 'react';
+import _ from 'lodash';
 import { connect } from 'react-redux';
-import { getPosts } from '../actions'
-import logo from '../logo.svg';
+import { getPosts, fetchPosts } from '../actions'
 import '../App.css';
 import { Container, Header, Button, Icon } from 'semantic-ui-react';
 import * as api from '../utils/api';
+import { getAllPosts } from '../reducers';
 
 class App extends Component {
-  
+  componentDidMount() {
+    this.props.fetchPosts();
+  }
+
+  displayPosts() {
+    return _.map(this.props.posts, post => {
+      return (
+        <li className='' key={post.id}>
+          {post.title}
+        </li>
+      );
+    });
+  }
   
   render() {
-    const p =  api.fetchPosts().then((posts) => posts);
-   api.fetchPosts().then((posts) => posts.map(post => {console.log(post)}));
+    //const p =  api.fetchPosts().then((posts) => posts);
+   //api.fetchPosts().then((posts) => posts.map(post => {console.log(post)}));
+   //const r = api.fetchPosts().then((posts) => posts.reduce((acc, post) => acc.concat(post), []));
+   //const s = api.fetchPosts().then((posts) => posts);
+  //  const r = api.fetchPosts().then((posts) => posts.reduce((acc, post) => {
+  //    acc.concat(post);
+  //  }, []));
+   //console.log(r);
+   //console.log(s);
+   //console.log(this.props.allPosts);
     
     return (
       <div className="App">
@@ -31,6 +52,11 @@ class App extends Component {
                 <Icon name='right arrow' />
           </Button>
         </Container>
+        <Container>
+          <ol>
+            {this.displayPosts()}
+          </ol>
+        </Container>
         <p className="App-intro">
           Getting started with Readable.
         </p>
@@ -39,9 +65,9 @@ class App extends Component {
   }
 }
 
-function mapStateToProps({ }) {
-  return {}
-}
+const mapStateToProps = state => ({
+  posts: state.posts
+})
 
 function mapDispatchToProps(dispatch) {
   return {
@@ -53,4 +79,4 @@ function mapDispatchToProps(dispatch) {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(App);
+export default connect(mapStateToProps, {fetchPosts})(App);

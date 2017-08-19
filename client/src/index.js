@@ -2,11 +2,11 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import 'semantic-ui-css/semantic.min.css';
-import App from './components/App';
+import Root from './components/Root';
 import registerServiceWorker from './registerServiceWorker';
 import { createStore, applyMiddleware, compose } from 'redux';
-import reducer from './reducers';
-import { Provider } from 'react-redux';
+import reducers from './reducers';
+import promise from 'redux-promise';
 
 const logger = store => next => action => {
   console.group(action.type);
@@ -20,14 +20,12 @@ const logger = store => next => action => {
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
 const store = createStore(
-  reducer,
-  composeEnhancers(applyMiddleware(logger)),
+  reducers,
+  composeEnhancers(applyMiddleware(promise, logger)),
 );
 
 ReactDOM.render(
-  <Provider store={store}>
-    <App  />
-  </Provider>, 
+  <Root store={store} />, 
   document.getElementById('root'));
 registerServiceWorker();
 
