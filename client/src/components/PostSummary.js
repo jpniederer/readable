@@ -1,13 +1,15 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 
-class PostSummary extends Component {
-  render() {
-    return (
-      <div>
-        PostSummary
-      </div>
-    )
-  }
+export default function PostSummary({ post }) {
+  return (
+    <div>
+      <Link to={`/posts/${post.id}`}>
+        {post.title}
+      </Link>
+      <p>
+        {post.body}
+      </p>
+    </div>
+  )
 }
-
-export default PostSummary;

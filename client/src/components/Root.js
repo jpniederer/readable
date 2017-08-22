@@ -3,12 +3,14 @@ import React from 'react';
 import { Provider } from 'react-redux';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import App from './App';
+import Post from './Post';
 
 const Root = ({ store }) => (
   <Provider store={store}>
     <BrowserRouter>
         <div>
             <Switch>
+                <Route path="/posts/:id" component={Post} />
                 <Route path="/" component={App} />
             </Switch>
         </div>

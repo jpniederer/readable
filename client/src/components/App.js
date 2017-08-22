@@ -1,38 +1,33 @@
 import React, { Component } from 'react';
 import _ from 'lodash';
 import { connect } from 'react-redux';
-import { getPosts, fetchPosts } from '../actions'
+import { getPosts, fetchPosts, fetchCategories } from '../actions'
 import '../App.css';
 import { Container, Header, Button, Icon } from 'semantic-ui-react';
 import * as api from '../utils/api';
 import { getAllPosts } from '../reducers';
+import PostSummaryList from './PostSummaryList';
+import PostSummary from './PostSummary';
+import { Link } from 'react-router-dom';
 
 class App extends Component {
   componentDidMount() {
     this.props.fetchPosts();
+    this.props.fetchCategories();
   }
 
   displayPosts() {
     return _.map(this.props.posts, post => {
       return (
-        <li className='' key={post.id}>
-          {post.title}
-        </li>
+        <div className='item' key={post.id}>
+          <PostSummary post={post} />
+        </div>
       );
     });
   }
   
   render() {
-    //const p =  api.fetchPosts().then((posts) => posts);
-   //api.fetchPosts().then((posts) => posts.map(post => {console.log(post)}));
-   //const r = api.fetchPosts().then((posts) => posts.reduce((acc, post) => acc.concat(post), []));
-   //const s = api.fetchPosts().then((posts) => posts);
-  //  const r = api.fetchPosts().then((posts) => posts.reduce((acc, post) => {
-  //    acc.concat(post);
-  //  }, []));
-   //console.log(r);
-   //console.log(s);
-   //console.log(this.props.allPosts);
+   const keys = _.keys(this.props.posts);
     
     return (
       <div className="App">
@@ -44,7 +39,7 @@ class App extends Component {
           />
           <Header
             as='h2'
-            content='A link aggregation community built using React and Redux.'
+            content='A posting community built using React and Redux.'
             style={{ fontSize: '1.7em', fontWeight: 'normal' }}
           />
           <Button primary size='huge'>
@@ -53,9 +48,22 @@ class App extends Component {
           </Button>
         </Container>
         <Container>
-          <ol>
+          <ul className='ui list'>
             {this.displayPosts()}
-          </ol>
+          </ul>
+          {this.props.posts && <PostSummaryList posts={this.props.posts} /> }
+          <div>
+            <ul className='ui list'> {
+              keys.map(key => {
+                <div className='ui list'>
+                  <Link to={`/posts/${key}`}>
+                    {this.props.posts[key].title}
+                  </Link>
+                </div>
+              })
+            }
+          </ul>
+        </div>
         </Container>
         <p className="App-intro">
           Getting started with Readable.
@@ -66,7 +74,8 @@ class App extends Component {
 }
 
 const mapStateToProps = state => ({
-  posts: state.posts
+  posts: state.posts,
+  categories: state.categories
 })
 
 function mapDispatchToProps(dispatch) {
@@ -79,4 +88,4 @@ function mapDispatchToProps(dispatch) {
   }
 }
 
-export default connect(mapStateToProps, {fetchPosts})(App);
+export default connect(mapStateToProps, {fetchPosts, fetchCategories})(App);
