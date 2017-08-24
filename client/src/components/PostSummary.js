@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 export default function PostSummary({ post }) {
   return (
     <div>
-      <Link to={`/posts/${post.id}`}>
+      <Link to={`/${post.category}/${post.id}`}>
         {post.title}
       </Link>
       <p>

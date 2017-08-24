@@ -19,7 +19,7 @@ class Post extends Component {
 
     return (
       <div>
-        <Link to='/'>Home</Link>
+        <h1>Post Details</h1>
         <h2>{post.title}</h2>
         <h4>by: {post.author}</h4>
         <p>

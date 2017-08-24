@@ -25,33 +25,25 @@ class App extends Component {
       );
     });
   }
-  
+
   render() {
-   const keys = _.keys(this.props.posts);
-    
+    const keys = _.keys(this.props.posts);
+
     return (
       <div className="App">
         <Container text>
-          <Header
-            as='h1'
-            content='readable'
-            style={{ fontSize: '4em', fontWeight: 'normal', marginBottom: 0, marginTop: '3em' }}
-          />
-          <Header
-            as='h2'
-            content='A posting community built using React and Redux.'
-            style={{ fontSize: '1.7em', fontWeight: 'normal' }}
-          />
-          <Button primary size='huge'>
-            Add a Link
+          <Link to='/new'>
+            <Button primary size='huge'>
+              Add a Link
                 <Icon name='right arrow' />
-          </Button>
+            </Button>
+          </Link>
         </Container>
         <Container>
           <ul className='ui list'>
             {this.displayPosts()}
           </ul>
-          {this.props.posts && <PostSummaryList posts={this.props.posts} /> }
+          {this.props.posts && <PostSummaryList posts={this.props.posts} />}
           <div>
             <ul className='ui list'> {
               keys.map(key => {
@@ -62,8 +54,8 @@ class App extends Component {
                 </div>
               })
             }
-          </ul>
-        </div>
+            </ul>
+          </div>
         </Container>
         <p className="App-intro">
           Getting started with Readable.
@@ -88,4 +80,4 @@ function mapDispatchToProps(dispatch) {
   }
 }
 
-export default connect(mapStateToProps, {fetchPosts, fetchCategories})(App);
+export default connect(mapStateToProps, { fetchPosts, fetchCategories })(App);
