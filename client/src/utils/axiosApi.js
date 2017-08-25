@@ -38,11 +38,12 @@ export const updatePost = (post, callback) => {
   return request;
 }
 
-export const voteOnPost = (id, option, callback) => {
+export const voteOnPost = (id, option) => {
   const request = axios
-    .post(`${ROOT_URL}/posts/${id}`, option, { headers })
-    .then(() => callback());
-
+    .post(`${ROOT_URL}/posts/${id}`,
+      { option },
+      { headers });
+  console.log(request);
   return request;
 }
 
@@ -80,8 +81,10 @@ export const postComment = (comment, callback) => {
 
 export const voteOnComment = (id, option, callback) => {
   const request = axios
-    .post(`${ROOT_URL}/comments/${id}`, option, { headers })
+    .post(`${ROOT_URL}/comments/${id}`, { option }, { headers })
     .then(() => callback());
+
+    return request;
 }
 
 export const updateComment = (comment, callback) => {

@@ -9,6 +9,9 @@ export default function (state = {}, action) {
             return { ...state, [action.payload.data.id]: action.payload.data };
         case Actions.FETCH_POSTS:
             return _.mapKeys(_.filter(action.payload.data, function (p) { return !p.deleted }), "id");
+        case Actions.VOTE_ON_POST:
+            console.log('Voted on post: ' + action.payload.data);
+            return { ...state, [action.payload.data.id]: action.payload.data };
         default:
             return state;
     }

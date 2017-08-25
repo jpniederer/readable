@@ -44,10 +44,11 @@ export function updatePost(post, callback) {
   }
 }
 
-export function voteOnPost(id, option, callback) {
+export function voteOnPost(id, option) {
+  console.log(id + ' ' + option + ' '  + Action.VOTE_ON_POST);
   return {
     type: Action.VOTE_ON_POST,
-    payload: axios.voteOnPost(id, option, callback),
+    payload: axios.voteOnPost(id, option),
   }
 }
 

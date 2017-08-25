@@ -1,5 +1,6 @@
 import CategoryReducer from './reducer_categories';
 import CommentReducer from './reducer_comments';
+import PostCommentReducer from './reducer_postComments';
 import PostsReducer from './reducer_posts';
 import * as api from '../utils/api';
 import * as axios from '../utils/axiosApi';
@@ -11,6 +12,7 @@ const rootReducer = combineReducers({
   categories: CategoryReducer,
   posts: PostsReducer,
   commentsForPost: CommentReducer,
+  postComments: PostCommentReducer,
   form: formReducer
 })
 

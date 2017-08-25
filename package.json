@@ -24,7 +24,8 @@
   },
   "scripts": {
     "start": "concurrently \"node server\" \"npm run client\"",
-    "client": "node client"
+    "client": "node client",
+    "postinstall": "cd client && npm install"
   },
   "devDependencies": {
     "concurrently": "^3.5.0"
