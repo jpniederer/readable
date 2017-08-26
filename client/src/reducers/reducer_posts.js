@@ -9,9 +9,12 @@ export default function (state = {}, action) {
             return { ...state, [action.payload.data.id]: action.payload.data };
         case Actions.FETCH_POSTS:
             return _.mapKeys(_.filter(action.payload.data, function (p) { return !p.deleted }), "id");
-        case Actions.VOTE_ON_POST:
-            console.log('Voted on post: ' + action.payload.data);
+        case Actions.UP_VOTE_POST:
+            //let updatedPost = state[action.payload.data.id];
+            //updatedPost.voteScore += 1;
             return { ...state, [action.payload.data.id]: action.payload.data };
+        case Actions.DOWN_VOTE_POST:
+            return { ...state, [action.payload.data.id]: action.payload.data }
         default:
             return state;
     }

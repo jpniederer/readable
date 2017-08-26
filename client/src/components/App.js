@@ -14,18 +14,21 @@ import { Link } from 'react-router-dom';
 class App extends Component {
   componentDidMount() {
     this.props.fetchPosts();
-    this.intializeComments();
   }
 
   intializeComments() {
-    _.map(this.props.post, post => {
-      console.log('fetching comments for ' + post.id);
+    _.map(this.props.posts, post => {
       this.props.fetchCommentsForPost(post.id);
     })
   }
 
   displayPosts() {
-    return _.map(this.props.posts, post => {
+    const category = this.props.match.params.category;
+    const matchingPosts = category ?
+      _.filter(this.props.posts, post => post.category === category) :
+      this.props.posts;
+
+    return _.map(matchingPosts, post => {
       return (
         <div className='item' key={post.id}>
           <PostSummary postId={post.id} />
@@ -36,6 +39,9 @@ class App extends Component {
 
   render() {
     const keys = _.keys(this.props.posts);
+    if (_.isEmpty(this.props.postComments)) {
+      this.intializeComments();
+    }
 
     return (
       <div className="App">
@@ -66,7 +72,7 @@ class App extends Component {
             <Container text>
               <Link to='/new'>
                 <Button primary size='huge'>
-                  Add a Link
+                  Add a Post
                 <Icon name='right arrow' />
                 </Button>
               </Link>
@@ -78,10 +84,14 @@ class App extends Component {
   }
 }
 
-const mapStateToProps = state => ({
-  posts: state.posts,
-  categories: state.categories
-})
+function mapStateToProps(state, ownProps) {
+  console.log(ownProps);
+  return {
+    posts: state.posts,
+    categories: state.categories,
+    postComments: state.postComments
+  }
+}
 
 function mapDispatchToProps(dispatch) {
   return {

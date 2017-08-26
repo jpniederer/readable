@@ -26,16 +26,15 @@ class Post extends Component {
           {post.body}
         </p>
       </div>
-
     )
   }
 }
 
-function mapStateToProps( state, ownProps) {
-  return { 
+function mapStateToProps(state, ownProps) {
+  return {
     post: state.posts[ownProps.match.params.id],
     commentsForPost: state.commentsForPost
   };
 }
 
-export default connect(mapStateToProps, {fetchPost, deletePost, fetchCommentsForPost})(Post);
+export default connect(mapStateToProps, { fetchPost, deletePost, fetchCommentsForPost })(Post);

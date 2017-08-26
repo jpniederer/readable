@@ -11,17 +11,17 @@ import Footer from './Footer';
 const Root = ({ store }) => (
   <Provider store={store}>
     <BrowserRouter>
-        <div>
-            <Header />
-            <Switch>
-                <Route exact path="/new" component={PostForm} />
-                <Route path="/:category/:id" component={Post} />
-                <Route path="/posts/:id" component={Post} />
-                <Route path="/:category" component={App} />
-                <Route path="/" component={App} />
-            </Switch>
-            <Footer />
-        </div>
+      <div>
+        <Header />
+        <Switch>
+          <Route exact path="/new" component={PostForm} />
+          <Route path="/:category/:id" component={Post} />
+          <Route path="/posts/:id" component={Post} />
+          <Route path="/:category" component={App} />
+          <Route path="/" component={App} />
+        </Switch>
+        <Footer />
+      </div>
     </BrowserRouter>
   </Provider>
 )

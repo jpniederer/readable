@@ -1,4 +1,5 @@
 import * as Action from '../constants/ActionTypes';
+import * as VoteOption from '../constants/VoteOptions';
 import * as axios from '../utils/axiosApi';
 import ax from 'axios';
 export const GET_POSTS = 'GET_POSTS';
@@ -44,16 +45,21 @@ export function updatePost(post, callback) {
   }
 }
 
-export function voteOnPost(id, option) {
-  console.log(id + ' ' + option + ' '  + Action.VOTE_ON_POST);
+export function upVotePost(id) {
   return {
-    type: Action.VOTE_ON_POST,
-    payload: axios.voteOnPost(id, option),
+    type: Action.UP_VOTE_POST,
+    payload: axios.voteOnPost(id, VoteOption.UP_VOTE),
+  }
+}
+
+export function downVotePost(id) {
+  return {
+    type: Action.DOWN_VOTE_POST,
+    payload: axios.voteOnPost(id, VoteOption.DOWN_VOTE)
   }
 }
 
 export function fetchCategories() {
-  console.log(axios.fetchCategories());
   return {
     type: Action.FETCH_CATEGORIES,
     payload: axios.fetchCategories(),
