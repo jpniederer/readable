@@ -79,10 +79,9 @@ export const postComment = (comment, callback) => {
   return request;
 }
 
-export const voteOnComment = (id, option, callback) => {
+export const voteOnComment = (id, option) => {
   const request = axios
-    .post(`${ROOT_URL}/comments/${id}`, { option }, { headers })
-    .then(() => callback());
+    .post(`${ROOT_URL}/comments/${id}`, { option }, { headers });
 
     return request;
 }

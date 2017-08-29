@@ -10,8 +10,6 @@ export default function (state = {}, action) {
         case Actions.FETCH_POSTS:
             return _.mapKeys(_.filter(action.payload.data, function (p) { return !p.deleted }), "id");
         case Actions.UP_VOTE_POST:
-            //let updatedPost = state[action.payload.data.id];
-            //updatedPost.voteScore += 1;
             return { ...state, [action.payload.data.id]: action.payload.data };
         case Actions.DOWN_VOTE_POST:
             return { ...state, [action.payload.data.id]: action.payload.data }
