@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import _ from 'lodash';
 import { connect } from 'react-redux';
 import { fetchCategories } from '../actions';
-import { NavLink } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 class Categories extends Component {
   componentDidMount() {
@@ -10,14 +10,18 @@ class Categories extends Component {
   }
 
   displayCategories() {
-    // Look into denoting the active link.
     // Try avoid mapping twice.
     return _.map(this.props.categories, cats => {
       return (_.map(cats, cat => {
+        const toLink = `/${cat.name}`;
         return (
-          <div className='item' key={cat.name}>
-            <NavLink to={`/${cat.name}`}>{cat.name}</NavLink>
-          </div>
+          <Link
+            to={toLink}
+            className={this.props.categoryPath === toLink ? 'active item' : 'item'}
+            key={cat.name}
+          >
+            {cat.name}
+          </Link>
         );
       }));
     });
@@ -25,13 +29,12 @@ class Categories extends Component {
 
   render() {
     return (
-      <div className='ui left inverted vertical menu'>
-        <div className='ui list'>
-          <div className='item'>
-            <NavLink to='/'>All</NavLink>
-          </div>
-          {this.displayCategories()}
+      <div className='ui secondary vertical menu'>
+        <div className='header item'>
+          Categories
         </div>
+        <Link to='/' className={this.props.categoryPath === '/' ? 'active item' : 'item'} key='all'>All</Link>
+        {this.displayCategories()}
       </div>
     )
   }

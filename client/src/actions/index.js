@@ -1,7 +1,6 @@
 import * as Action from '../constants/ActionTypes';
 import * as VoteOption from '../constants/VoteOptions';
 import * as axios from '../utils/axiosApi';
-import ax from 'axios';
 export const GET_POSTS = 'GET_POSTS';
 
 const headers = {

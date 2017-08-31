@@ -42,13 +42,14 @@ class App extends Component {
     if (_.isEmpty(this.props.postComments)) {
       this.intializeComments();
     }
+    const categoryPath = this.props.match.url;
 
     return (
-      <div className="App">
-        <div className=''>
-          <Categories />
+      <div className="ui two column divided grid">
+        <div className='right floated four wide column' style={{ maxWidth: 250 }}>
+          <Categories categoryPath={categoryPath} />
         </div>
-        <div className='pusher'>
+        <div className='ui ten wide column'>
           <h2>Posts</h2>
           <Container>
             <ul className='ui list'>
