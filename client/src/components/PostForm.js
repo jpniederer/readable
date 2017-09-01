@@ -1,13 +1,29 @@
 import React, { Component } from 'react';
+import _ from 'lodash';
 import { Field, reduxForm } from 'redux-form';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { createPost, fetchCategories } from '../actions';
+import { createPost, fetchCategories, fetchPost } from '../actions';
 import uuid from 'uuid';
 
 class PostForm extends Component {
   componentDidMount() {
     this.props.fetchCategories();
+
+    if (this.props.match.params.id) {
+      this.props.fetchPost(this.props.match.params.id);
+    }
+  }
+
+  categoryOptions() {
+    return _.map(this.props.categories, cats => {
+      return (_.map(cats, cat => {
+        console.log(cat);
+        return (
+          <option value={cat.name} key={cat.name}>{cat.name}</option>
+        );
+      }));
+    });
   }
 
   renderTextField(field) {
@@ -25,12 +41,19 @@ class PostForm extends Component {
     );
   }
 
-  renderDropdownField(field) {
-    // set up the category dropdown list.
+  renderDropdown(field) {
+    const { meta: { touched, error } } = field;
+    const className = `form-group ${touched && error ? "has-danger" : ""}`;
+
     return (
-      <div>
+      <div className={className}>
+        <label>{field.label}</label>
+
+        <div className="text-help">
+          {touched ? error : ""}
+        </div>
       </div>
-    )
+    );
   }
 
   renderMarkdownField(field) {
@@ -51,30 +74,38 @@ class PostForm extends Component {
   }
 
   render() {
-    const { handleSubmit } = this.props;
+    const { handleSubmit, post, initialValues, pristine, reset, submitting } = this.props;
+    console.log(this.props.initialValues);
 
     return (
       <form onSubmit={handleSubmit(this.submitForm.bind(this))}>
-        <Field
-          label='Title For Post'
-          name='title'
-          component={this.renderTextField}
-        />
-        <Field
-          label='Category'
-          name='category'
-          component={this.renderTextField}
-        />
-        <Field
-          label='Author'
-          name='author'
-          component={this.renderTextField}
-        />
-        <Field
-          label='Post'
-          name='body'
-          component={this.renderTextField}
-        />
+        <div>
+          <label>Title for Post</label>
+          <div>
+            <Field name='title' component='input' type='text' placeholder='Title' />
+          </div>
+        </div>
+        <div>
+          <label>Category</label>
+          <div>
+            <Field name='category' component='select'>
+              <option value=''>Select a Category</option>
+              {this.categoryOptions()}
+            </Field>
+          </div>
+        </div>
+        <div>
+          <label>Author</label>
+          <div>
+            <Field name='author' component='input' type='text' placeholder='Author' />
+          </div>
+        </div>
+        <div>
+          <label>Post</label>
+          <div>
+            <Field name='body' component='textarea' placeholder='Body of post. Markdown allowed.' />
+          </div>
+        </div>
         <button type='submit' className=''>Submit</button>
         <Link to='/' className=''>Cancel</Link>
       </form>
@@ -104,7 +135,19 @@ function validate(values) {
   return errors;
 }
 
+function mapStateToProps(state, ownProps) {
+  console.log(state.posts);
+  console.log(ownProps.match.params.id);
+  const match = state.posts[ownProps.match.params.id];
+  console.log(match);
+  return {
+    post: match ? match : null,
+    categories: state.categories,
+    initialValues: match ? match : null
+  }
+}
+
 export default reduxForm({
   validate,
   form: "PostForm"
-})(connect(null, { createPost, fetchCategories })(PostForm));
+})(connect(mapStateToProps, { createPost, fetchCategories, fetchPost })(PostForm));
