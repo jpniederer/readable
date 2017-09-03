@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import _ from 'lodash';
 import { connect } from 'react-redux';
-import { getPosts, fetchPosts, fetchCommentsForPost } from '../actions';
+import { getPosts, fetchPosts, fetchCommentsForPost, reversePosts } from '../actions';
 import '../App.css';
 import { Container, Header, Button, Icon } from 'semantic-ui-react';
 import * as api from '../utils/api';
@@ -10,6 +10,7 @@ import Categories from '../containers/Categories';
 import PostSummaryList from './PostSummaryList';
 import PostSummary from './PostSummary';
 import { Link } from 'react-router-dom';
+import sortBy from 'sort-by';
 
 class App extends Component {
   componentDidMount() {
@@ -22,13 +23,22 @@ class App extends Component {
     })
   }
 
+  reverseSort() {
+    const newOrderBy = this.props.postSortOrder[0] === '-' ? this.props.postSortOrder.substring(1) : '-' + this.props.postSortOrder;
+    console.log(newOrderBy);
+    this.props.reversePosts(newOrderBy);
+  }
+
   displayPosts() {
     const category = this.props.match.params.category;
     const matchingPosts = category ?
       _.filter(this.props.posts, post => post.category === category) :
       this.props.posts;
 
-    return _.map(matchingPosts, post => {
+    const orderedMatchingPosts = _.values(matchingPosts).sort(sortBy(this.props.postSortOrder));
+    console.log(orderedMatchingPosts);
+
+    return _.map(orderedMatchingPosts, post => {
       return (
         <div className='item' key={post.id}>
           <PostSummary postId={post.id} />
@@ -80,6 +90,9 @@ class App extends Component {
             </Container>
           </div>
         </div>
+        <div>
+          <button className='ui button'onClick={() => this.reverseSort()}>Reverse Posts</button>
+        </div>
       </div>
     );
   }
@@ -90,18 +103,13 @@ function mapStateToProps(state, ownProps) {
   return {
     posts: state.posts,
     categories: state.categories,
-    postComments: state.postComments
+    postComments: state.postComments,
+    postSortOrder: state.sorts.postSort
   }
 }
 
 function mapDispatchToProps(dispatch) {
-  return {
-    fetchAllPosts: () =>
-      api.fetchPosts().then((posts) => {
-        dispatch(getPosts(posts));
-      })
-
-  }
+  return {  }
 }
 
-export default connect(mapStateToProps, { fetchPosts, fetchCommentsForPost })(App);
+export default connect(mapStateToProps, { fetchPosts, fetchCommentsForPost, reversePosts })(App);
