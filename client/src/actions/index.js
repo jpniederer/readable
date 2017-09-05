@@ -110,23 +110,9 @@ export function sortPosts(field) {
   }
 }
 
-export function reversePosts(newOrderBy) {
-  return {
-    type: Action.REVERSE_SORT_POSTS,
-    payload: newOrderBy
-  }
-}
-
 export function sortComments(field) {
   return {
     type: Action.SORT_COMMENTS,
     payload: field
-  }
-}
-
-export function reverseComments(newOrderBy) {
-  return {
-    type: Action.REVERSE_SORT_COMMENTS,
-    payload: newOrderBy
   }
 }

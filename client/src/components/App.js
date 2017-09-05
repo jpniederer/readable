@@ -1,18 +1,24 @@
 import React, { Component } from 'react';
 import _ from 'lodash';
 import { connect } from 'react-redux';
-import { getPosts, fetchPosts, fetchCommentsForPost, reversePosts } from '../actions';
+import { getPosts, fetchPosts, fetchCommentsForPost, sortPosts } from '../actions';
 import '../App.css';
 import { Container, Header, Button, Icon } from 'semantic-ui-react';
 import * as api from '../utils/api';
 import { getAllPosts } from '../reducers';
-import Categories from '../containers/Categories';
+import Categories from './Categories';
 import PostSummaryList from './PostSummaryList';
 import PostSummary from './PostSummary';
 import { Link } from 'react-router-dom';
 import sortBy from 'sort-by';
 
 class App extends Component {
+  constructor(props) {
+    super(props);
+
+    this.sortChange = this.sortChange.bind(this);
+  }
+
   componentDidMount() {
     this.props.fetchPosts();
   }
@@ -23,10 +29,8 @@ class App extends Component {
     })
   }
 
-  reverseSort() {
-    const newOrderBy = this.props.postSortOrder[0] === '-' ? this.props.postSortOrder.substring(1) : '-' + this.props.postSortOrder;
-    console.log(newOrderBy);
-    this.props.reversePosts(newOrderBy);
+  sortChange(event) {
+    this.props.sortPosts(event.target.value);
   }
 
   displayPosts() {
@@ -61,6 +65,14 @@ class App extends Component {
         </div>
         <div className='ui ten wide column'>
           <h2>Posts</h2>
+          <div>
+            <select className='ui dropdown' value={this.props.postSortOrder} onChange={this.sortChange}>
+              <option value='-voteScore'>Order by Votes</option>
+              <option value='voteScore'>Order by Votes Ascending</option>
+              <option value='-timestamp'>Order by Date Newest</option>
+              <option value='timestamp'>Order by Date Oldest</option>
+            </select>
+          </div>
           <Container>
             <ul className='ui list'>
               {this.displayPosts()}
@@ -90,9 +102,6 @@ class App extends Component {
             </Container>
           </div>
         </div>
-        <div>
-          <button className='ui button'onClick={() => this.reverseSort()}>Reverse Posts</button>
-        </div>
       </div>
     );
   }
@@ -109,7 +118,7 @@ function mapStateToProps(state, ownProps) {
 }
 
 function mapDispatchToProps(dispatch) {
-  return {  }
+  return {}
 }
 
-export default connect(mapStateToProps, { fetchPosts, fetchCommentsForPost, reversePosts })(App);
+export default connect(mapStateToProps, { fetchPosts, fetchCommentsForPost, sortPosts })(App);

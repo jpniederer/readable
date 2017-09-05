@@ -2,21 +2,33 @@ import React, { Component } from 'react';
 import _ from 'lodash';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { fetchPost, deletePost, fetchCommentsForPost } from '../actions';
+import { fetchPost, deletePost, fetchCommentsForPost, sortComments } from '../actions';
 import Comment from './Comment';
 import Remarkable from 'remarkable';
+import sortBy from 'sort-by';
 
 class Post extends Component {
+  constructor(props) {
+    super(props);
+
+    this.sortChange = this.sortChange.bind(this);
+  }
+
   componentDidMount() {
     const { id } = this.props.match.params;
     this.props.fetchPost(id);
     this.props.fetchCommentsForPost(id);
   }
 
+  sortChange(event) {
+    this.props.sortComments(event.target.value);
+  }
+
   displayComments() {
     const comments = this.props.comments;
-    
-    return _.map(comments, comment => {
+    const orderedComments = _.values(comments).sort(sortBy(this.props.commentSortOrder));
+
+    return _.map(orderedComments, comment => {
       return (
         <div className='item' key={comment.id}>
           <Comment comment={comment} />
@@ -27,8 +39,8 @@ class Post extends Component {
 
   deleteThisPost() {
     console.log(this.props);
-    this.props.delete(this.props.post.id, 
-      () => { this.props.history.push('/')}
+    this.props.delete(this.props.post.id,
+      () => { this.props.history.push('/') }
     );
   }
 
@@ -57,12 +69,19 @@ class Post extends Component {
           </div>
         </div>
         <div>
-          <button onClick={() => alert('Edit')} className=''>Edit</button>
-          <Link to={`/edit/post/${post.id}`} className=''>Edit</Link>
+          <Link to={`/edit/post/${post.id}`} className=''>Edit Post</Link>
           <button onClick={() => this.deleteThisPost()} className=''>Delete</button>
         </div>
         <div>
           <h2>Comments</h2>
+          <div>
+            <select className='ui dropdown' value={this.props.commentSortOrder} onChange={this.sortChange}>
+              <option value='-voteScore'>Order by Votes</option>
+              <option value='voteScore'>Order by Votes Ascending</option>
+              <option value='-timestamp'>Order by Date Newest</option>
+              <option value='timestamp'>Order by Date Oldest</option>
+            </select>
+          </div>
           <ul className='ui list'>
             {this.displayComments()}
           </ul>
@@ -77,15 +96,17 @@ function mapStateToProps(state, ownProps) {
   return {
     post: state.posts[ownProps.match.params.id],
     comments: state.commentsForPost,
+    commentSortOrder: state.sorts.commentSort,
     //comments: state.postComments[ownProps.match.params.id]
   };
 }
 
-function mapDispatchToProps (dispatch) {
+function mapDispatchToProps(dispatch) {
   return {
     fetchPost: (data) => dispatch(fetchPost(data)),
     delete: (id, callback) => dispatch(deletePost(id, callback)),
-    fetchCommentsForPost: (data) => dispatch(fetchCommentsForPost(data))
+    fetchCommentsForPost: (data) => dispatch(fetchCommentsForPost(data)),
+    sortComments: (data) => dispatch(sortComments(data)),
   }
 }
 

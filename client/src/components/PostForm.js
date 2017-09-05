@@ -3,7 +3,7 @@ import _ from 'lodash';
 import { Field, reduxForm } from 'redux-form';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { createPost, fetchCategories, fetchPost } from '../actions';
+import { createPost, updatePost, fetchCategories, fetchPost } from '../actions';
 import uuid from 'uuid';
 
 class PostForm extends Component {
@@ -18,7 +18,6 @@ class PostForm extends Component {
   categoryOptions() {
     return _.map(this.props.categories, cats => {
       return (_.map(cats, cat => {
-        console.log(cat);
         return (
           <option value={cat.name} key={cat.name}>{cat.name}</option>
         );
@@ -33,8 +32,8 @@ class PostForm extends Component {
     return (
       <div className={className}>
         <label>{field.label}</label>
-        <input className="form-control" type="text" {...field.input} />
-        <div className="text-help">
+        <input className="form-control" type="text" placeholder={field.placeholder} {...field.input} />
+        <div className="ui red message">
           {touched ? error : ""}
         </div>
       </div>
@@ -49,7 +48,7 @@ class PostForm extends Component {
       <div className={className}>
         <label>{field.label}</label>
 
-        <div className="text-help">
+        <div className="ui red message">
           {touched ? error : ""}
         </div>
       </div>
@@ -57,53 +56,64 @@ class PostForm extends Component {
   }
 
   renderMarkdownField(field) {
-    // allows markdown to be entered.
+    const { meta: { touched, error } } = field;
+    const className = `form-group ${touched && error ? "has-danger" : ""}`;
+
     return (
-      <div>
+      <div className={className}>
+        <label>{field.label}</label>
+        <textarea className="form-control" rows='10' cols='80' placeholder={field.placeholder} {...field.input} />
+        <div className="ui red message">
+          {touched ? error : ""}
+        </div>
       </div>
-    )
+    );
   }
 
   submitForm(values) {
     // Set to be uuid.
-    values.id = uuid.v4();
-    values.timestamp = Date.now();
-    this.props.createPost(values, () => {
-      this.props.history.push('/');
-    });
+    if (this.props.initialValues) {
+      values.id = this.props.initialValues.id;
+      this.props.updatePost(values, () => {
+        this.props.history.push('/');
+      });
+    } else {
+      values.id = uuid.v4();
+      values.timestamp = Date.now();
+      this.props.createPost(values, () => {
+        this.props.history.push('/');
+      });
+    }
   }
 
   render() {
-    const { handleSubmit, post, initialValues, pristine, reset, submitting } = this.props;
-    console.log(this.props.initialValues);
+    const { handleSubmit } = this.props;
 
     return (
       <form onSubmit={handleSubmit(this.submitForm.bind(this))}>
         <div>
-          <label>Title for Post</label>
           <div>
-            <Field name='title' component='input' type='text' placeholder='Title' />
+            <Field name='title' placeholder='Title' component={this.renderTextField} label='Title for Post: ' />
           </div>
         </div>
         <div>
-          <label>Category</label>
           <div>
-            <Field name='category' component='select'>
+          <label>Category: </label>
+            <Field name='category' component='select'  label='Category' >
               <option value=''>Select a Category</option>
               {this.categoryOptions()}
             </Field>
           </div>
         </div>
         <div>
-          <label>Author</label>
           <div>
-            <Field name='author' component='input' type='text' placeholder='Author' />
+            <Field name='author' component={this.renderTextField} placeholder='Author'   label='Author: ' />
           </div>
         </div>
         <div>
-          <label>Post</label>
+        <label>Post Body: </label>
           <div>
-            <Field name='body' component='textarea' placeholder='Body of post. Markdown allowed.' />
+            <Field name='body' component={this.renderMarkdownField} placeholder='Body of post. Markdown allowed.' />
           </div>
         </div>
         <button type='submit' className=''>Submit</button>
@@ -136,10 +146,8 @@ function validate(values) {
 }
 
 function mapStateToProps(state, ownProps) {
-  console.log(state.posts);
-  console.log(ownProps.match.params.id);
   const match = state.posts[ownProps.match.params.id];
-  console.log(match);
+  console.log(ownProps);
   return {
     post: match ? match : null,
     categories: state.categories,
@@ -147,7 +155,12 @@ function mapStateToProps(state, ownProps) {
   }
 }
 
-export default reduxForm({
+PostForm = reduxForm({
   validate,
-  form: "PostForm"
-})(connect(mapStateToProps, { createPost, fetchCategories, fetchPost })(PostForm));
+  form: 'PostForm',
+  enableReinitialize: true
+})(PostForm);
+
+PostForm = connect(mapStateToProps, { createPost, updatePost, fetchCategories, fetchPost })(PostForm);
+
+export default PostForm;
