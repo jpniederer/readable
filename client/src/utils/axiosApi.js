@@ -72,10 +72,9 @@ export const fetchComment = (id) => {
   return request;
 }
 
-export const postComment = (comment, callback) => {
-  const request = axios.post(`${ROOT_URL}/comments`, { headers })
-    .then(() => callback());
-
+export const postComment = (comment) => {
+  const request = axios.post(`${ROOT_URL}/comments`, comment, { headers });
+  console.log(request);
   return request;
 }
 
@@ -86,18 +85,16 @@ export const voteOnComment = (id, option) => {
     return request;
 }
 
-export const updateComment = (comment, callback) => {
+export const updateComment = (comment) => {
   const request = axios
-    .put(`${ROOT_URL}/comments/${comment.id}`, comment, { headers })
-    .then(() => callback());
+    .put(`${ROOT_URL}/comments/${comment.id}`, comment, { headers });
 
     return request;
 }
 
-export const deleteComment = (id, callback) => {
+export const deleteComment = (id) => {
   const request = axios
-    .delete(`${ROOT_URL}/posts/${id}`, { headers })
-    .then(() => callback());
+    .delete(`${ROOT_URL}/comments/${id}`, { headers });
 
     return request;
 }

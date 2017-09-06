@@ -19,8 +19,10 @@ client/
     components/
       App.js
       App.test.js
+      Categories.js
       Category.js
       Comment.js
+      CommentForm.js
       CommentList.js
       Footer.js
       Header.js
@@ -32,8 +34,6 @@ client/
     constants/
       ActionTypes.js
       VoteOptions.js
-    containers/
-      Categories.js
     reducers/
       index.js
       reducer_categories.js

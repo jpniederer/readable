@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { fetchPost, deletePost, fetchCommentsForPost, sortComments } from '../actions';
 import Comment from './Comment';
+import CommentForm from './CommentForm';
 import Remarkable from 'remarkable';
 import sortBy from 'sort-by';
 
@@ -35,6 +36,10 @@ class Post extends Component {
         </div>
       );
     });
+  }
+
+  addComment() {
+    
   }
 
   deleteThisPost() {
@@ -74,17 +79,27 @@ class Post extends Component {
         </div>
         <div>
           <h2>Comments</h2>
+          {Object.keys(this.props.comments).length > 0 ?
           <div>
-            <select className='ui dropdown' value={this.props.commentSortOrder} onChange={this.sortChange}>
-              <option value='-voteScore'>Order by Votes</option>
-              <option value='voteScore'>Order by Votes Ascending</option>
-              <option value='-timestamp'>Order by Date Newest</option>
-              <option value='timestamp'>Order by Date Oldest</option>
-            </select>
+            <div>
+              <select className='ui dropdown' value={this.props.commentSortOrder} onChange={this.sortChange}>
+                <option value='-voteScore'>Order by Votes</option>
+                <option value='voteScore'>Order by Votes Ascending</option>
+                <option value='-timestamp'>Order by Date Newest</option>
+                <option value='timestamp'>Order by Date Oldest</option>
+              </select>
+            </div>
+            <ul className='ui list'>
+              {this.displayComments()}
+            </ul>
+            </div>
+           : 
+            <div>
+              <h3>No Comments Exist for Post</h3>
+            </div>}
+          <div>
+            <CommentForm parentId={post.id} />
           </div>
-          <ul className='ui list'>
-            {this.displayComments()}
-          </ul>
         </div>
       </div>
     )

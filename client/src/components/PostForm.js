@@ -147,7 +147,7 @@ function validate(values) {
 
 function mapStateToProps(state, ownProps) {
   const match = state.posts[ownProps.match.params.id];
-  console.log(ownProps);
+
   return {
     post: match ? match : null,
     categories: state.categories,

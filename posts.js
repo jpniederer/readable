@@ -22,6 +22,16 @@ const defaultData = {
     category: 'redux',
     voteScore: -5,
     deleted: false
+  },
+  "7ni6ok3ym7mf1p33lnez": {
+    id: '7ni6ok3ym7mf1p33lnez',
+    timestamp: 1468479767190,
+    title: 'Learn Anything, Slowly',
+    body: 'It takes more than 10 minutes to learn a technology. **You can learn React in 11 with Udacity.** ',
+    author: 'thingtwo',
+    category: 'udacity',
+    voteScore: 4,
+    deleted: false
   }
 }
 

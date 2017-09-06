@@ -82,24 +82,24 @@ export function downVoteComment(id) {
   }
 }
 
-export function deleteComment(id, callback) {
+export function deleteComment(id) {
   return {
     type: Action.DELETE_COMMENT,
-    payload: api.deleteComment(id, callback),
+    payload: api.deleteComment(id),
   }
 }
 
-export function addComment(comment, callback) {
+export function addComment(comment) {
   return {
     type: Action.POST_COMMENT,
-    payload: api.postComment(comment, callback),
+    payload: api.postComment(comment),
   }
 }
 
-export function editComment(comment, callback) {
+export function editComment(comment) {
   return {
     type: Action.UPDATE_COMMENT,
-    payload: api.updateComment(comment, callback),
+    payload: api.updateComment(comment),
   }
 }
 
