@@ -1,12 +1,16 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { deleteComment, upVoteComment, downVoteComment } from '../actions';
+import { deleteComment, upVoteComment, downVoteComment, toggleCommentEdit } from '../actions';
 import { getDateString } from '../utils/utilities';
 import Remarkable from 'remarkable';
 
 class Comment extends Component {
   deleteThisComment() {
     this.props.delete(this.props.comment.id);
+  }
+
+  toggleEdit(id) {
+    this.props.editComment(id);
   }
 
   displayMarkdown(rawMarkdown) {
@@ -25,6 +29,7 @@ class Comment extends Component {
         >
         </div>
         <div>
+          <button onClick={() => this.toggleEdit(this.props.comment.id)} className=''>Edit</button>
           <button onClick={() => this.deleteThisComment()} className=''>Delete</button>
         </div>
         <div>
@@ -48,6 +53,7 @@ function mapDispatchToProps(dispatch) {
     upVote: (data) => dispatch(upVoteComment(data)),
     downVote: (data) => dispatch(downVoteComment(data)),
     delete: (id) => dispatch(deleteComment(id)),
+    editComment: (id) => dispatch(toggleCommentEdit(id)),
   }
 }
 

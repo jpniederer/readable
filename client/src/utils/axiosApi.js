@@ -8,17 +8,17 @@ const headers = {
 
 // Posts
 export const fetchPosts = () => {
-  const request = axios.get(`${ROOT_URL}/posts`, { headers })
+  const request = axios.get(`${ROOT_URL}/posts`, { headers });
   return request;
 }
 
 export const fetchPostsForCategory = (category) => {
-  const request = axios.get(`${ROOT_URL}/${category}/posts`, { headers })
+  const request = axios.get(`${ROOT_URL}/${category}/posts`, { headers });
   return request;
 }
 
 export const fetchPost = (id) => {
-  const request = axios.get(`${ROOT_URL}/posts/${id}`, { headers })
+  const request = axios.get(`${ROOT_URL}/posts/${id}`, { headers });
   return request;
 }
 
@@ -43,7 +43,7 @@ export const voteOnPost = (id, option) => {
     .post(`${ROOT_URL}/posts/${id}`,
       { option },
       { headers });
-  console.log(request);
+
   return request;
 }
 
@@ -57,24 +57,23 @@ export const deletePost = (id, callback) => {
 
 // Categories
 export const fetchCategories = () => {
-  const request = axios.get(`${ROOT_URL}/categories`, { headers })
+  const request = axios.get(`${ROOT_URL}/categories`, { headers });
   return request;
 }
 
 // Comments
 export const fetchCommentsForPost = (postId) => {
-  const request = axios.get(`${ROOT_URL}/posts/${postId}/comments`, { headers })
+  const request = axios.get(`${ROOT_URL}/posts/${postId}/comments`, { headers });
   return request;
 }
 
 export const fetchComment = (id) => {
-  const request = axios.get(`${ROOT_URL}/comments/${id}`, { headers })
+  const request = axios.get(`${ROOT_URL}/comments/${id}`, { headers });
   return request;
 }
 
 export const postComment = (comment) => {
   const request = axios.post(`${ROOT_URL}/comments`, comment, { headers });
-  console.log(request);
   return request;
 }
 
@@ -82,19 +81,19 @@ export const voteOnComment = (id, option) => {
   const request = axios
     .post(`${ROOT_URL}/comments/${id}`, { option }, { headers });
 
-    return request;
+  return request;
 }
 
 export const updateComment = (comment) => {
   const request = axios
     .put(`${ROOT_URL}/comments/${comment.id}`, comment, { headers });
 
-    return request;
+  return request;
 }
 
 export const deleteComment = (id) => {
   const request = axios
     .delete(`${ROOT_URL}/comments/${id}`, { headers });
-
-    return request;
+    
+  return request;
 }

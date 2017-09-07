@@ -75,7 +75,6 @@ export function upVoteComment(id) {
 }
 
 export function downVoteComment(id) {
-  console.log(id + ' ' + Action.VOTE_ON_COMMENT);
   return {
     type: Action.VOTE_ON_COMMENT,
     payload: api.voteOnComment(id, VoteOption.DOWN_VOTE),
@@ -114,5 +113,12 @@ export function sortComments(field) {
   return {
     type: Action.SORT_COMMENTS,
     payload: field
+  }
+}
+
+export function toggleCommentEdit(id) {
+  return {
+    type: Action.START_EDITING_COMMENT,
+    payload: id
   }
 }

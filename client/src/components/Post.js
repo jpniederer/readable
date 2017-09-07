@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import _ from 'lodash';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { fetchPost, deletePost, fetchCommentsForPost, sortComments } from '../actions';
+import { fetchPost, deletePost, fetchCommentsForPost, sortComments, toggleCommentEdit } from '../actions';
 import Comment from './Comment';
 import CommentForm from './CommentForm';
 import Remarkable from 'remarkable';
@@ -26,20 +26,27 @@ class Post extends Component {
   }
 
   displayComments() {
-    const comments = this.props.comments;
+    const comments = _.filter(this.props.comments, { 'parentId': this.props.post.id });
     const orderedComments = _.values(comments).sort(sortBy(this.props.commentSortOrder));
 
     return _.map(orderedComments, comment => {
       return (
         <div className='item' key={comment.id}>
-          <Comment comment={comment} />
+          {comment.id === this.props.commentToEdit ?
+            <CommentForm
+              parentId={comment.parentId}
+              comment={comment}
+              heading='Edit Comment'
+            /> :
+            <Comment comment={comment} />
+          }
         </div>
       );
     });
   }
 
   addComment() {
-    
+
   }
 
   deleteThisPost() {
@@ -80,25 +87,32 @@ class Post extends Component {
         <div>
           <h2>Comments</h2>
           {Object.keys(this.props.comments).length > 0 ?
-          <div>
             <div>
-              <select className='ui dropdown' value={this.props.commentSortOrder} onChange={this.sortChange}>
-                <option value='-voteScore'>Order by Votes</option>
-                <option value='voteScore'>Order by Votes Ascending</option>
-                <option value='-timestamp'>Order by Date Newest</option>
-                <option value='timestamp'>Order by Date Oldest</option>
-              </select>
+              <div>
+                <select className='ui dropdown' value={this.props.commentSortOrder} onChange={this.sortChange}>
+                  <option value='-voteScore'>Order by Votes</option>
+                  <option value='voteScore'>Order by Votes Ascending</option>
+                  <option value='-timestamp'>Order by Date Newest</option>
+                  <option value='timestamp'>Order by Date Oldest</option>
+                </select>
+              </div>
+              <ul className='ui list'>
+                {this.displayComments()}
+              </ul>
             </div>
-            <ul className='ui list'>
-              {this.displayComments()}
-            </ul>
-            </div>
-           : 
+            :
             <div>
               <h3>No Comments Exist for Post</h3>
             </div>}
           <div>
-            <CommentForm parentId={post.id} />
+            {this.props.commentToEdit === 'new' ?
+              <CommentForm
+                parentId={post.id}
+                heading='Add a Comment'
+              /> :
+              <button onClick={() => this.props.toggleCommentEdit('new')} className=''>Add a Comment</button>
+            }
+
           </div>
         </div>
       </div>
@@ -107,12 +121,11 @@ class Post extends Component {
 }
 
 function mapStateToProps(state, ownProps) {
-  console.log(ownProps);
   return {
     post: state.posts[ownProps.match.params.id],
-    comments: state.commentsForPost,
+    comments: state.comments,
     commentSortOrder: state.sorts.commentSort,
-    //comments: state.postComments[ownProps.match.params.id]
+    commentToEdit: state.editing.commentId,
   };
 }
 
@@ -122,6 +135,7 @@ function mapDispatchToProps(dispatch) {
     delete: (id, callback) => dispatch(deletePost(id, callback)),
     fetchCommentsForPost: (data) => dispatch(fetchCommentsForPost(data)),
     sortComments: (data) => dispatch(sortComments(data)),
+    toggleCommentEdit: (data) => dispatch(toggleCommentEdit(data)),
   }
 }
 

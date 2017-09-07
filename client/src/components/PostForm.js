@@ -98,8 +98,8 @@ class PostForm extends Component {
         </div>
         <div>
           <div>
-          <label>Category: </label>
-            <Field name='category' component='select'  label='Category' >
+            <label>Category: </label>
+            <Field name='category' component='select' label='Category' >
               <option value=''>Select a Category</option>
               {this.categoryOptions()}
             </Field>
@@ -107,11 +107,11 @@ class PostForm extends Component {
         </div>
         <div>
           <div>
-            <Field name='author' component={this.renderTextField} placeholder='Author'   label='Author: ' />
+            <Field name='author' component={this.renderTextField} placeholder='Author' label='Author: ' />
           </div>
         </div>
         <div>
-        <label>Post Body: </label>
+          <label>Post Body: </label>
           <div>
             <Field name='body' component={this.renderMarkdownField} placeholder='Body of post. Markdown allowed.' />
           </div>

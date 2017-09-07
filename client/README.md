@@ -38,7 +38,7 @@ client/
       index.js
       reducer_categories.js
       reducer_comments.js
-      reducer_postComments.js
+      reducer_editing.js
       reducer_posts.js
     utils/
       api.js

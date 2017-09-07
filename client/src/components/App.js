@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import _ from 'lodash';
 import { connect } from 'react-redux';
-import { getPosts, fetchPosts, fetchCommentsForPost, sortPosts } from '../actions';
+import { fetchPosts, fetchCommentsForPost, sortPosts } from '../actions';
 import '../App.css';
 import { Container, Header, Button, Icon } from 'semantic-ui-react';
 import * as api from '../utils/api';
@@ -23,12 +23,6 @@ class App extends Component {
     this.props.fetchPosts();
   }
 
-  intializeComments() {
-    _.map(this.props.posts, post => {
-      this.props.fetchCommentsForPost(post.id);
-    })
-  }
-
   sortChange(event) {
     this.props.sortPosts(event.target.value);
   }
@@ -40,7 +34,6 @@ class App extends Component {
       this.props.posts;
 
     const orderedMatchingPosts = _.values(matchingPosts).sort(sortBy(this.props.postSortOrder));
-    console.log(orderedMatchingPosts);
 
     return _.map(orderedMatchingPosts, post => {
       return (
@@ -53,9 +46,7 @@ class App extends Component {
 
   render() {
     const keys = _.keys(this.props.posts);
-    if (_.isEmpty(this.props.postComments)) {
-      this.intializeComments();
-    }
+
     const categoryPath = this.props.match.url;
 
     return (
@@ -108,11 +99,9 @@ class App extends Component {
 }
 
 function mapStateToProps(state, ownProps) {
-  console.log(ownProps);
   return {
     posts: state.posts,
     categories: state.categories,
-    postComments: state.postComments,
     postSortOrder: state.sorts.postSort
   }
 }

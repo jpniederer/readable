@@ -1,6 +1,6 @@
 import CategoryReducer from './reducer_categories';
 import CommentReducer from './reducer_comments';
-import PostCommentReducer from './reducer_postComments';
+import EditReducer from './reducer_editing';
 import PostsReducer from './reducer_posts';
 import SortReducer from './reducer_sorts';
 
@@ -10,9 +10,9 @@ import { reducer as formReducer } from 'redux-form';
 const rootReducer = combineReducers({
   categories: CategoryReducer,
   posts: PostsReducer,
-  commentsForPost: CommentReducer,
-  postComments: PostCommentReducer,
+  comments: CommentReducer,
   sorts: SortReducer,
+  editing: EditReducer,
   form: formReducer
 })
 

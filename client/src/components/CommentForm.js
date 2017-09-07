@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Field, reduxForm } from 'redux-form';
 import { connect } from 'react-redux';
-import { addComment, editComment } from '../actions';
+import { addComment, editComment, toggleCommentEdit } from '../actions';
 import uuid from 'uuid';
 
 class CommentForm extends Component {
@@ -46,15 +46,17 @@ class CommentForm extends Component {
       this.props.addComment(values);
       this.props.reset();
     }
+
+    this.props.toggleCommentEdit('');
   }
 
   render() {
-    const { handleSubmit, pristine, submitting, reset } = this.props;
+    const { handleSubmit, pristine, submitting, reset, heading } = this.props;
 
     return (
       <form onSubmit={handleSubmit(this.submitForm.bind(this))}>
         <div>
-          <h3>Add a Comment</h3>
+          <h3>{heading}</h3>
           <div>
             <Field name='author' placeholder='Author' component={this.renderTextField} label='Author: ' />
           </div>
@@ -62,7 +64,7 @@ class CommentForm extends Component {
             <Field name='body' placeholder='Comment text, Markdown accepted...' component={this.renderMarkdownField} label='Comment: ' />
           </div>
           <button type='submit' className=''>Submit</button>
-          <button type='button' disabled={pristine || submitting} onClick={reset}>Cancel</button>
+          <button type='button' disabled={submitting} onClick={() => this.props.toggleCommentEdit('')}>Cancel</button>
         </div>
       </form>
     )
@@ -70,7 +72,7 @@ class CommentForm extends Component {
 }
 
 function validate(values) {
-  
+
 }
 
 function mapStateToProps(state, ownProps) {
@@ -85,6 +87,6 @@ CommentForm = reduxForm({
   enableReinitialize: true
 })(CommentForm);
 
-CommentForm = connect(mapStateToProps, { addComment, editComment })(CommentForm);
+CommentForm = connect(mapStateToProps, { addComment, editComment, toggleCommentEdit })(CommentForm);
 
 export default CommentForm;
