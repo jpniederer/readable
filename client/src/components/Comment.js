@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { deleteComment, upVoteComment, downVoteComment, toggleCommentEdit } from '../actions';
 import { getDateString } from '../utils/utilities';
+import Voter from './Voter';
 import Remarkable from 'remarkable';
 
 class Comment extends Component {
@@ -20,22 +21,29 @@ class Comment extends Component {
 
   render() {
     return (
-      <div>
-        <div>
-          Posted by {this.props.comment.author} on {getDateString(this.props.comment.timestamp)}
-        </div>
-        <div
-          dangerouslySetInnerHTML={this.displayMarkdown(this.props.comment.body)}
-        >
-        </div>
-        <div>
-          <button onClick={() => this.toggleEdit(this.props.comment.id)} className=''>Edit</button>
-          <button onClick={() => this.deleteThisComment()} className=''>Delete</button>
-        </div>
-        <div>
-          <button className='ui button' onClick={() => this.props.upVote(this.props.comment.id)}>UpVote</button>
-          {this.props.comment.voteScore}
-          <button className='ui button' onClick={() => this.props.downVote(this.props.comment.id)}>DownVote</button>
+      <div className='comment'>
+        <a className='avatar'>
+          <i className="id card outline icon"></i>
+        </a>
+        <div className='content'>
+          <a className='author'>{this.props.comment.author}</a>
+          <div className='metadata'>
+            <div className='date'>{getDateString(this.props.comment.timestamp)}
+            </div>
+          </div>
+          <div
+            className='text'
+            dangerouslySetInnerHTML={this.displayMarkdown(this.props.comment.body)}
+          ></div>
+          <div className='actions'>
+            <button onClick={() => this.toggleEdit(this.props.comment.id)} className=''>Edit</button>
+            <button onClick={() => this.deleteThisComment()} className=''>Delete</button>
+          </div>
+          <Voter
+            item={this.props.comment}
+            upVote={this.props.upVote}
+            downVote={this.props.downVote}
+          />
         </div>
       </div>
     )

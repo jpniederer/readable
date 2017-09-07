@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import _ from 'lodash';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
 import { fetchPost, deletePost, fetchCommentsForPost, sortComments, toggleCommentEdit } from '../actions';
 import Comment from './Comment';
 import CommentForm from './CommentForm';
+import PostSummary from './PostSummary';
 import Remarkable from 'remarkable';
 import sortBy from 'sort-by';
 
@@ -26,12 +26,11 @@ class Post extends Component {
   }
 
   displayComments() {
-    const comments = _.filter(this.props.comments, { 'parentId': this.props.post.id });
-    const orderedComments = _.values(comments).sort(sortBy(this.props.commentSortOrder));
+    const orderedComments = _.values(this.props.comments).sort(sortBy(this.props.commentSortOrder));
 
     return _.map(orderedComments, comment => {
       return (
-        <div className='item' key={comment.id}>
+        <div key={comment.id}>
           {comment.id === this.props.commentToEdit ?
             <CommentForm
               parentId={comment.parentId}
@@ -43,10 +42,6 @@ class Post extends Component {
         </div>
       );
     });
-  }
-
-  addComment() {
-
   }
 
   deleteThisPost() {
@@ -65,27 +60,29 @@ class Post extends Component {
     const { post } = this.props;
 
     if (!post) {
-      return <div>Loading...</div>;
+      return <div>Loading...If loading takes a while, the post you requested does not exist.</div>;
     }
 
     return (
-      <div>
+      <div className='ui container'>
         <div>
           <h1>Post Details</h1>
-          <h2>{post.title}</h2>
-          <h4>by: {post.author}</h4>
-          <div
-            className='content'
-            dangerouslySetInnerHTML={this.displayMarkdown(post.body)}
-          >
+          <div className='ui card'>
+            <PostSummary
+              postId={post.id}
+              onDelete={() => { this.props.history.push('/') }}
+            />
           </div>
-        </div>
-        <div>
-          <Link to={`/edit/post/${post.id}`} className=''>Edit Post</Link>
-          <button onClick={() => this.deleteThisPost()} className=''>Delete</button>
-        </div>
-        <div>
-          <h2>Comments</h2>
+          <h4>Post Content</h4>
+          <div className='ui segment'>
+            <div
+              className='content'
+              dangerouslySetInnerHTML={this.displayMarkdown(post.body)}
+            ></div>
+          </div>
+        </div >
+        <div className='pad-top'>
+          <h2 className='ui dividing header'>Comments</h2>
           {Object.keys(this.props.comments).length > 0 ?
             <div>
               <div>
@@ -96,26 +93,29 @@ class Post extends Component {
                   <option value='timestamp'>Order by Date Oldest</option>
                 </select>
               </div>
-              <ul className='ui list'>
+              <div className='ui comments'>
                 {this.displayComments()}
-              </ul>
+              </div>
             </div>
             :
             <div>
               <h3>No Comments Exist for Post</h3>
             </div>}
-          <div>
+          <div className='pad-top'>
             {this.props.commentToEdit === 'new' ?
               <CommentForm
                 parentId={post.id}
                 heading='Add a Comment'
               /> :
-              <button onClick={() => this.props.toggleCommentEdit('new')} className=''>Add a Comment</button>
+              <button
+                onClick={() => this.props.toggleCommentEdit('new')}
+                className='ui primary button'>
+                Add a Comment
+              </button>
             }
-
           </div>
         </div>
-      </div>
+      </div >
     )
   }
 }
@@ -123,7 +123,7 @@ class Post extends Component {
 function mapStateToProps(state, ownProps) {
   return {
     post: state.posts[ownProps.match.params.id],
-    comments: state.comments,
+    comments: _.filter(state.comments, { 'parentId': ownProps.match.params.id }),
     commentSortOrder: state.sorts.commentSort,
     commentToEdit: state.editing.commentId,
   };

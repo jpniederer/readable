@@ -3,11 +3,8 @@ import _ from 'lodash';
 import { connect } from 'react-redux';
 import { fetchPosts, fetchCommentsForPost, sortPosts } from '../actions';
 import '../App.css';
-import { Container, Header, Button, Icon } from 'semantic-ui-react';
-import * as api from '../utils/api';
-import { getAllPosts } from '../reducers';
+import { Container, Button, Icon } from 'semantic-ui-react';
 import Categories from './Categories';
-import PostSummaryList from './PostSummaryList';
 import PostSummary from './PostSummary';
 import { Link } from 'react-router-dom';
 import sortBy from 'sort-by';
@@ -38,15 +35,13 @@ class App extends Component {
     return _.map(orderedMatchingPosts, post => {
       return (
         <div className='item' key={post.id}>
-          <PostSummary postId={post.id} />
+          <PostSummary postId={post.id} onDelete={() => { }} />
         </div>
       );
     });
   }
 
   render() {
-    const keys = _.keys(this.props.posts);
-
     const categoryPath = this.props.match.url;
 
     return (
@@ -64,25 +59,14 @@ class App extends Component {
               <option value='timestamp'>Order by Date Oldest</option>
             </select>
           </div>
-          <Container>
-            <ul className='ui list'>
-              {this.displayPosts()}
-            </ul>
-            {this.props.posts && <PostSummaryList posts={this.props.posts} />}
-            <div>
-              <ul className='ui list'> {
-                keys.map(key => {
-                  <div className='ui list'>
-                    <Link to={`/posts/${key}`}>
-                      {this.props.posts[key].title}
-                    </Link>
-                  </div>
-                })
-              }
+          <div className='pad-top'>
+            <Container>
+              <ul className='ui divided items'>
+                {this.displayPosts()}
               </ul>
-            </div>
-          </Container>
-          <div>
+            </Container>
+          </div>
+          <div className='pad-top'>
             <Container text>
               <Link to='/new'>
                 <Button primary size='huge'>
@@ -92,8 +76,8 @@ class App extends Component {
               </Link>
             </Container>
           </div>
-        </div>
-      </div>
+        </div >
+      </div >
     );
   }
 }
@@ -104,10 +88,6 @@ function mapStateToProps(state, ownProps) {
     categories: state.categories,
     postSortOrder: state.sorts.postSort
   }
-}
-
-function mapDispatchToProps(dispatch) {
-  return {}
 }
 
 export default connect(mapStateToProps, { fetchPosts, fetchCommentsForPost, sortPosts })(App);

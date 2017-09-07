@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { upVotePost, downVotePost, fetchCommentsForPost } from '../actions';
+import { upVotePost, downVotePost, fetchCommentsForPost, deletePost } from '../actions';
 import { getDateString } from '../utils/utilities';
+import Voter from './Voter';
 import * as _ from 'lodash';
 
 class PostSummary extends Component {
@@ -12,33 +13,51 @@ class PostSummary extends Component {
       comment.parentId === this.props.post.id).length;
   }
 
+  deleteThisPost() {
+    console.log('Deleting post ' + this.props.post.id);
+    this.props.delete(this.props.post.id,
+      () => this.props.onDelete()
+    );
+  }
+
   componentDidMount() {
     this.props.fetchCommentsForPost(this.props.post.id);
   }
 
   render() {
+    const commentCount = this.getCommentCount();
+
     return (
-      <div>
-        <Link to={`/${this.props.post.category}/${this.props.post.id}`}>
+      <div className='content'>
+
+        <Link className='header' to={`/${this.props.post.category}/${this.props.post.id}`}>
           {this.props.post.title}
         </Link>
-        - by {this.props.post.author}
-        <div>
-          <button className='ui button' onClick={() => this.props.upVote(this.props.post.id)}>UpVote</button>
-          {this.props.post.voteScore}
-          <button className='ui button' onClick={() => this.props.downVote(this.props.post.id)}>DownVote</button>
+        <div className='meta'>
+          <span>
+            by {this.props.post.author} on {getDateString(this.props.post.timestamp)}
+          </span>
         </div>
         <div>
-          posted on {getDateString(this.props.post.timestamp)}
+          <Link to={`/edit/post/${this.props.post.id}`} className=''>Edit Post</Link>
+          <button onClick={() => this.deleteThisPost()} className='negative ui button'>Delete</button>
         </div>
-        {this.getCommentCount()} Comments
+        <div>
+          {commentCount} {commentCount === 1 ? "Comment" : "Comments"}
+        </div>
+        <div>
+          <Voter
+            item={this.props.post}
+            upVote={this.props.upVote}
+            downVote={this.props.downVote}
+          />
+        </div>
       </div>
     )
   }
 }
 
 function mapStateToProps(state, ownProps) {
-  console.log(state.comments);
   return {
     post: state.posts[ownProps.postId],
     comments: state.comments,
@@ -49,7 +68,8 @@ function mapDispatchToProps(dispatch) {
   return {
     upVote: (data) => dispatch(upVotePost(data)),
     downVote: (data) => dispatch(downVotePost(data)),
-    fetchCommentsForPost: (data) => dispatch(fetchCommentsForPost(data))
+    fetchCommentsForPost: (data) => dispatch(fetchCommentsForPost(data)),
+    delete: (id, callback) => dispatch(deletePost(id, callback))
   }
 }
 

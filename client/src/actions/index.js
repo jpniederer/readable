@@ -24,9 +24,11 @@ export function createPost(post, callback) {
 }
 
 export function deletePost(id, callback) {
+  api.deletePost(id, callback);
+
   return {
     type: Action.DELETE_POST,
-    payload: api.deletePost(id, callback),
+    payload: id,
   }
 }
 

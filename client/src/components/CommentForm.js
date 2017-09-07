@@ -7,14 +7,16 @@ import uuid from 'uuid';
 class CommentForm extends Component {
   renderTextField(field) {
     const { meta: { touched, error } } = field;
-    const className = `form-group ${touched && error ? "has-danger" : ""}`;
+    const className = `form-group ${touched && error ? 'has-danger' : ''}`;
 
     return (
       <div className={className}>
         <label>{field.label}</label>
-        <input className="form-control" type="text" placeholder={field.placeholder} {...field.input} />
-        <div className="">
-          {touched ? error : ""}
+        <div className='eight wide field'>
+          <input className='form-control' type='text' placeholder={field.placeholder} {...field.input} />
+        </div>
+        <div className='error-text'>
+          {touched ? error : ''}
         </div>
       </div>
     );
@@ -22,14 +24,16 @@ class CommentForm extends Component {
 
   renderMarkdownField(field) {
     const { meta: { touched, error } } = field;
-    const className = `form-group ${touched && error ? "has-danger" : ""}`;
+    const className = `form-group ${touched && error ? 'has-danger' : ''}`;
 
     return (
       <div className={className}>
         <label>{field.label}</label>
-        <textarea className="form-control" rows='10' cols='80' placeholder={field.placeholder} {...field.input} />
-        <div className="">
-          {touched ? error : ""}
+        <div className='eight wide field'>
+          <textarea placeholder={field.placeholder} {...field.input} />
+        </div>
+        <div className='error-text'>
+          {touched ? error : ''}
         </div>
       </div>
     );
@@ -51,20 +55,30 @@ class CommentForm extends Component {
   }
 
   render() {
-    const { handleSubmit, pristine, submitting, reset, heading } = this.props;
+    const { handleSubmit, submitting, heading } = this.props;
 
     return (
       <form onSubmit={handleSubmit(this.submitForm.bind(this))}>
-        <div>
+        <div className='ui form'>
           <h3>{heading}</h3>
           <div>
-            <Field name='author' placeholder='Author' component={this.renderTextField} label='Author: ' />
+            <Field name='author' placeholder='Author' className='field' component={this.renderTextField} label='Author: ' />
           </div>
           <div>
-            <Field name='body' placeholder='Comment text, Markdown accepted...' component={this.renderMarkdownField} label='Comment: ' />
+            <Field name='body' placeholder='Comment text, Markdown accepted...' className='field' component={this.renderMarkdownField} label='Comment: ' />
           </div>
-          <button type='submit' className=''>Submit</button>
-          <button type='button' disabled={submitting} onClick={() => this.props.toggleCommentEdit('')}>Cancel</button>
+          <button
+            type='submit'
+            className='ui primary button'>
+            Submit
+          </button>
+          <button
+            type='button'
+            disabled={submitting}
+            className='ui button'
+            onClick={() => this.props.toggleCommentEdit('')}>
+            Cancel
+          </button>
         </div>
       </form>
     )
@@ -72,7 +86,17 @@ class CommentForm extends Component {
 }
 
 function validate(values) {
+  const errors = {};
 
+  if (!values.author) {
+    errors.author = 'Enter an author';
+  }
+
+  if (!values.body) {
+    errors.body = 'Your comment needs a body';
+  }
+
+  return errors;
 }
 
 function mapStateToProps(state, ownProps) {

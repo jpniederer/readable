@@ -15,16 +15,6 @@ class PostForm extends Component {
     }
   }
 
-  categoryOptions() {
-    return _.map(this.props.categories, cats => {
-      return (_.map(cats, cat => {
-        return (
-          <option value={cat.name} key={cat.name}>{cat.name}</option>
-        );
-      }));
-    });
-  }
-
   renderTextField(field) {
     const { meta: { touched, error } } = field;
     const className = `form-group ${touched && error ? "has-danger" : ""}`;
@@ -32,8 +22,10 @@ class PostForm extends Component {
     return (
       <div className={className}>
         <label>{field.label}</label>
-        <input className="form-control" type="text" placeholder={field.placeholder} {...field.input} />
-        <div className="ui red message">
+        <div className='six wide field'>
+          <input type="text" placeholder={field.placeholder} {...field.input} />
+        </div>
+        <div className="error-text">
           {touched ? error : ""}
         </div>
       </div>
@@ -48,7 +40,18 @@ class PostForm extends Component {
       <div className={className}>
         <label>{field.label}</label>
 
-        <div className="ui red message">
+        <select className='ui dropdown' {...field.input}>
+          <option value=''>Select a Category</option>
+          {_.map(field.categories, cats => {
+            return (_.map(cats, cat => {
+              return (
+                <option value={cat.name} key={cat.name}>{cat.name}</option>
+              );
+            }));
+          })}
+        </select>
+
+        <div className="error-text">
           {touched ? error : ""}
         </div>
       </div>
@@ -62,8 +65,10 @@ class PostForm extends Component {
     return (
       <div className={className}>
         <label>{field.label}</label>
-        <textarea className="form-control" rows='10' cols='80' placeholder={field.placeholder} {...field.input} />
-        <div className="ui red message">
+        <div className='eight wide field'>
+          <textarea placeholder={field.placeholder} {...field.input} />
+        </div>
+        <div className="error-text">
           {touched ? error : ""}
         </div>
       </div>
@@ -71,7 +76,6 @@ class PostForm extends Component {
   }
 
   submitForm(values) {
-    // Set to be uuid.
     if (this.props.initialValues) {
       values.id = this.props.initialValues.id;
       this.props.updatePost(values, () => {
@@ -91,33 +95,35 @@ class PostForm extends Component {
 
     return (
       <form onSubmit={handleSubmit(this.submitForm.bind(this))}>
-        <div>
-          <div>
-            <Field name='title' placeholder='Title' component={this.renderTextField} label='Title for Post: ' />
+        <div className='ui container'>
+          <div className='ui form'>
+            <div>
+              <div>
+                <Field name='title' placeholder='Title' className='field' component={this.renderTextField} label='Title for Post: ' />
+              </div>
+            </div>
+            <div>
+              <div>
+                <div className='eight wide field'>
+                  <Field name='category' className='field' component={this.renderDropdown} label='Category: ' categories={this.props.categories} />
+                </div>
+              </div>
+            </div>
+            <div>
+              <div>
+                <Field name='author' className='field' component={this.renderTextField} placeholder='Author' label='Author: ' />
+              </div>
+            </div>
+            <div>
+              <label>Post Body: </label>
+              <div>
+                <Field name='body' className='field' component={this.renderMarkdownField} placeholder='Body of post. Markdown allowed.' />
+              </div>
+            </div>
           </div>
+          <button type='submit' className='ui primary button'>Submit</button>
+          <Link to='/' className=''>Cancel</Link>
         </div>
-        <div>
-          <div>
-            <label>Category: </label>
-            <Field name='category' component='select' label='Category' >
-              <option value=''>Select a Category</option>
-              {this.categoryOptions()}
-            </Field>
-          </div>
-        </div>
-        <div>
-          <div>
-            <Field name='author' component={this.renderTextField} placeholder='Author' label='Author: ' />
-          </div>
-        </div>
-        <div>
-          <label>Post Body: </label>
-          <div>
-            <Field name='body' component={this.renderMarkdownField} placeholder='Body of post. Markdown allowed.' />
-          </div>
-        </div>
-        <button type='submit' className=''>Submit</button>
-        <Link to='/' className=''>Cancel</Link>
       </form>
     )
   }
