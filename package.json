@@ -23,7 +23,7 @@
     "redux": "^3.7.2"
   },
   "scripts": {
-    "start": "concurrently \"node server\" \"npm run client\"",
+    "start": "concurrently \"node ./server/server\" \"npm run client\"",
     "client": "node client",
     "postinstall": "cd client && npm install"
   },

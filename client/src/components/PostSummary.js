@@ -26,20 +26,21 @@ class PostSummary extends Component {
 
   render() {
     const commentCount = this.getCommentCount();
+    const { category, id, title, author, timestamp } = this.props.post;
 
-    return (
+    return (     
       <div className='content'>
 
-        <Link className='header' to={`/${this.props.post.category}/${this.props.post.id}`}>
-          {this.props.post.title}
+        <Link className='header' to={`/${category}/${id}`}>
+          {title}
         </Link>
         <div className='meta'>
           <span>
-            by {this.props.post.author} on {getDateString(this.props.post.timestamp)}
+            by {author} on {getDateString(timestamp)}
           </span>
         </div>
         <div>
-          <Link to={`/edit/post/${this.props.post.id}`} className=''>Edit Post</Link>
+          <Link to={`/edit/post/${id}`} className=''>Edit Post</Link>
           <button onClick={() => this.deleteThisPost()} className='negative ui button'>Delete</button>
         </div>
         <div>

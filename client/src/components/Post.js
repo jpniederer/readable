@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
 import _ from 'lodash';
 import { connect } from 'react-redux';
+import { Route } from 'react-router-dom';
 import { fetchPost, deletePost, fetchCommentsForPost, sortComments, toggleCommentEdit } from '../actions';
 import Comment from './Comment';
 import CommentForm from './CommentForm';
+import PostDoesNotExist from './PostDoesNotExist';
 import PostSummary from './PostSummary';
 import Remarkable from 'remarkable';
 import sortBy from 'sort-by';
@@ -45,7 +47,6 @@ class Post extends Component {
   }
 
   deleteThisPost() {
-    console.log(this.props);
     this.props.delete(this.props.post.id,
       () => { this.props.history.push('/') }
     );
@@ -60,7 +61,7 @@ class Post extends Component {
     const { post } = this.props;
 
     if (!post) {
-      return <div>Loading...If loading takes a while, the post you requested does not exist.</div>;
+      return (<div><Route component={PostDoesNotExist} /></div>)
     }
 
     return (

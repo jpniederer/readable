@@ -8,7 +8,11 @@ export default function (state = {}, action) {
     case Actions.FETCH_POST:
     case Actions.UP_VOTE_POST:
     case Actions.DOWN_VOTE_POST:
-      return { ...state, [action.payload.data.id]: action.payload.data };
+      if (action.payload.data) {
+        return { ...state, [action.payload.data.id]: action.payload.data };
+      } else {
+        return state;
+      }
     case Actions.FETCH_POSTS:
       return _.mapKeys(_.filter(action.payload.data, function (p) { return !p.deleted }), "id");
     default:

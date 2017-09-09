@@ -18,7 +18,7 @@ The client runs at http://localhost:3000/.
 
 ## About
 There are two pieces to the solution:
-  1. Server - Developed by Udacity. The Server supplies the application with an API to interact with posts and comments. All files found in the root directory.
+  1. Server - Developed by Udacity. The Server supplies the application with an API to interact with posts and comments. All files found in the server directory.
   2. Client - This is my solution based on the rubric provided by Udacity. All files are found in the client directory.
 
 ## Folder Structure
@@ -28,6 +28,7 @@ readable/
   client/
     README.md
     node_modules/
+      ...
     package.json
     public/
       index.html
@@ -70,12 +71,14 @@ readable/
       registerServiceWorker.js
       README.md
   node_modules/
-  categories.js
+    ...
+  server
+    categories.js
+    comments.js
+    config.js
+    posts.js
+    server.js 
   client.js
-  comments.js
-  config.js
   package.json
-  posts.js
   README.md
-  server.js 
 ```
